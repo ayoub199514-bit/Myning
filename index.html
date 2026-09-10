@@ -3,32 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الدعم التحليلي</title>
+    <title>الدعم التحليلي | DAI/USDT</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #111827;
-            --bg-tertiary: #1a2235;
-            --bg-card: #1e293b;
-            --accent-blue: #3b82f6;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --accent-yellow: #f59e0b;
-            --accent-purple: #8b5cf6;
-            --accent-pink: #ec4899;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border-color: #1e293b;
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --bg-primary: #0c1210;
+            --bg-secondary: #131a16;
+            --bg-tertiary: #1a231d;
+            --bg-card: #1e2a23;
+            --accent-blue: #e8a33d;
+            --accent-green: #26a17b;
+            --accent-red: #e0555c;
+            --accent-yellow: #f0b555;
+            --accent-purple: #1f8f6f;
+            --accent-pink: #c98a2e;
+            --text-primary: #eef1ee;
+            --text-secondary: #97a49c;
+            --text-muted: #647169;
+            --border-color: #202b24;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             height: 100vh;
@@ -39,7 +42,7 @@
         .login-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);
+            background: linear-gradient(135deg, #0c1210 0%, #16241d 50%, #0c1210 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -67,9 +70,37 @@
             margin-bottom: 30px;
         }
 
-        .login-header .logo {
-            font-size: 56px;
-            margin-bottom: 15px;
+        .coin-mark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .coin-mark .coin {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: #0c1210;
+        }
+
+        .coin-mark .coin-d {
+            background: linear-gradient(135deg, #f4c17a, var(--accent-blue));
+        }
+
+        .coin-mark .coin-u {
+            background: linear-gradient(135deg, var(--accent-green), #5fd3ab);
+        }
+
+        .coin-mark .swap-icon {
+            font-size: 16px;
+            color: var(--text-secondary);
         }
 
         .login-header h1 {
@@ -762,24 +793,18 @@
     <div class="login-overlay" id="loginOverlay">
         <div class="login-box">
             <div class="login-header">
-                <div class="logo">📊</div>
+                <div class="coin-mark">
+                    <span class="coin coin-d">D</span>
+                    <i class="fas fa-right-left swap-icon"></i>
+                    <span class="coin coin-u">U</span>
+                </div>
                 <h1>الدعم التحليلي</h1>
-                <p>منصة التداول الذكية مع مساعد AI</p>
+                <p>مجتمع متداولي زوج DAI/USDT</p>
             </div>
 
             <div class="input-group">
                 <label><i class="fas fa-user"></i> اسم المستخدم</label>
                 <input type="text" id="usernameInput" placeholder="أدخل اسمك المستعار" maxlength="20">
-            </div>
-
-            <div class="input-group">
-                <label><i class="fas fa-key"></i> مفتاح Gemini API (اختياري)</label>
-                <input type="password" id="apiKeyInput" placeholder="AIza... (للتحليل الذكي)">
-                <div class="api-hint">
-                    <i class="fas fa-info-circle"></i>
-                    احصل على مفتاح مجاني من 
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a>
-                </div>
             </div>
 
             <button class="btn-primary" onclick="joinChat()">
@@ -789,7 +814,7 @@
 
             <div class="disclaimer-box">
                 <i class="fas fa-exclamation-triangle"></i>
-                <strong>تنبيه:</strong> هذا الموقع للأغراض التعليمية فقط. التحليلات ليست نصائح مالية.
+                <strong>تنبيه:</strong> هذا الموقع مخصص لمجتمع متداولي DAI/USDT لأغراض تعليمية فقط. التحليلات ليست نصائح مالية.
             </div>
         </div>
     </div>
@@ -827,8 +852,8 @@
                     </button>
                     <i class="fas fa-comments" style="font-size: 24px; color: var(--accent-blue);"></i>
                     <div>
-                        <h2 id="chatRoomTitle">الدعم التحليلي - العام</h2>
-                        <span id="chatRoomDesc">تواصل مع المتداولين</span>
+                        <h2 id="chatRoomTitle">الدعم التحليلي - غرفة DAI/USDT</h2>
+                        <span id="chatRoomDesc">نقاش عام حول زوج DAI/USDT</span>
                     </div>
                 </div>
                 <div class="header-actions">
@@ -843,7 +868,7 @@
 
             <div class="disclaimer-bar">
                 <i class="fas fa-exclamation-circle"></i>
-                للأغراض التعليمية فقط | ليست نصائح مالية
+                تعليمي فقط لمتابعي DAI/USDT | ليست نصائح مالية
             </div>
 
             <div class="chat-messages" id="chatMessages"></div>
@@ -885,7 +910,7 @@
     <div class="bot-modal" id="botModal">
         <div class="bot-container">
             <div class="bot-header">
-                <h3><i class="fas fa-robot"></i> المساعد التحليلي الذكي</h3>
+                <h3><i class="fas fa-robot"></i> مساعد تحليل DAI/USDT</h3>
                 <button class="close-bot" onclick="closeBot()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -894,7 +919,7 @@
             <div class="bot-messages" id="botMessages">
                 <div class="bot-message ai">
                     <strong> المساعد الذكي:</strong><br>
-                    مرحباً! أنا هنا لمساعدتك في تحليل الشارتات والإجابة على أسئلتك.<br><br>
+                    مرحباً! أنا هنا لمساعدتك في متابعة زوج DAI/USDT وتحليل شارتاته والإجابة على أسئلتك.<br><br>
                     يمكنك:<br>
                     • رفع صورة شارت للتحليل<br>
                     • سؤال عن الأنماط الفنية<br>
@@ -928,7 +953,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, onChildAdded, serverTimestamp, query, orderByChild, limitToLast } 
+        import { getDatabase, ref, push, onValue, onChildAdded, onDisconnect, serverTimestamp, query, orderByChild, limitToLast } 
             from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -956,7 +981,6 @@
 
         window.joinChat = function() {
             const username = document.getElementById('usernameInput').value.trim();
-            const apiKey = document.getElementById('apiKeyInput').value.trim();
 
             if (username.length < 2) {
                 alert('الاسم يجب أن يكون حرفين على الأقل');
@@ -965,7 +989,6 @@
 
             currentUser = username;
             userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            geminiKey = apiKey;
 
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('appContainer').style.display = 'flex';
@@ -974,7 +997,7 @@
             listenToMessages();
             listenToUsers();
 
-            addSystemMessage(`👋 مرحباً ${currentUser}! انضممت إلى الدعم التحليلي`);
+            addSystemMessage(`👋 مرحباً ${currentUser}! انضممت إلى مجتمع DAI/USDT`);
         };
 
         function registerPresence() {
@@ -1042,8 +1065,8 @@
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
             
             if (mode === 'public') {
-                document.getElementById('chatRoomTitle').textContent = 'الدعم التحليلي - العام';
-                document.getElementById('chatRoomDesc').textContent = 'تواصل مع المتداولين';
+                document.getElementById('chatRoomTitle').textContent = 'الدعم التحليلي - غرفة DAI/USDT';
+                document.getElementById('chatRoomDesc').textContent = 'نقاش عام حول زوج DAI/USDT';
                 document.querySelectorAll('.mode-btn')[0].classList.add('active');
                 addSystemMessage('🌍 انتقلت إلى الدردشة العامة');
             }
@@ -1113,12 +1136,13 @@
             window.removeBotImage();
 
             // إرسال للـ AI
-            if (geminiKey && botImageBase64) {
-                await analyzeWithGemini(botImageBase64, text);
-            } else if (text) {
-                // رد بسيط إذا لم يكن هناك مفتاح
+            if (botImageBase64) {
                 setTimeout(() => {
-                    addBotMessage('للحصول على تحليل ذكي، يرجى:\n1. إدخال مفتاح Gemini API\n2. رفع صورة الشارت', 'ai');
+                    addBotMessage('عذراً، التحليل الذكي غير متاح حالياً. يمكنك سؤال المتداولين الآخرين عن شارت DAI/USDT في الدردشة العامة أو الخاصة.', 'ai');
+                }, 500);
+            } else if (text) {
+                setTimeout(() => {
+                    addBotMessage('يرجى رفع صورة شارت DAI/USDT لتحليلها.', 'ai');
                 }, 500);
             }
         };
@@ -1129,8 +1153,8 @@
                 const mimeType = imageBase64.split(';')[0].split(':')[1];
 
                 const prompt = question
-                    ? `محلل فني خبير. المستخدم يسأل: "${question}". حلل الشارت:`
-                    : 'محلل فني محترف. حلل هذا الشارت:';
+                    ? `محلل فني خبير في زوج DAI/USDT. المستخدم يسأل: "${question}". حلل الشارت:`
+                    : 'محلل فني محترف متخصص في زوج DAI/USDT. حلل هذا الشارت:';
 
                 const fullPrompt = `${prompt}
                 
