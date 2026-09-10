@@ -764,21 +764,50 @@
             transition: all 0.2s;
         }
 
+        #menuBtn {
+            display: none;
+        }
+
+        #closeSidebarBtn {
+            display: none;
+        }
+
+        .sidebar-overlay {
+            display: none;
+        }
+
         .bot-send:hover {
             transform: scale(1.05);
         }
 
         @media (max-width: 768px) {
+            #menuBtn {
+                display: flex;
+            }
+
+            #closeSidebarBtn {
+                display: flex;
+            }
+
             .sidebar {
                 position: fixed;
                 right: -300px;
                 top: 0;
                 bottom: 0;
                 z-index: 100;
+                transition: right 0.3s ease;
             }
 
             .sidebar.open {
                 right: 0;
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 90;
             }
 
             .message {
@@ -825,7 +854,12 @@
         <!-- الشريط الجانبي -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h3><i class="fas fa-users"></i> المتصلون</h3>
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <h3><i class="fas fa-users"></i> المتصلون</h3>
+                    <button class="icon-btn" id="closeSidebarBtn" onclick="toggleSidebar()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
                 <span class="online-badge" id="onlineCount">0</span>
             </div>
             
@@ -843,11 +877,13 @@
             </div>
         </div>
 
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
         <!-- منطقة الدردشة -->
         <div class="chat-main">
             <div class="chat-header">
                 <div class="chat-title">
-                    <button class="icon-btn" onclick="toggleSidebar()" id="menuBtn" style="display:none;">
+                    <button class="icon-btn" onclick="toggleSidebar()" id="menuBtn">
                         <i class="fas fa-bars"></i>
                     </button>
                     <i class="fas fa-comments" style="font-size: 24px; color: var(--accent-blue);"></i>
@@ -1032,7 +1068,7 @@
                     const user = child.val();
                     if (user && user.id && user.id !== userId) {
                         const userDiv = document.createElement('div');
-                        userDiv.className = 'user-item';
+                        userDiv.className = 'user-item' + (targetUser && targetUser.id === user.id ? ' active' : '');
                         userDiv.onclick = () => startPrivateChat(user);
                         userDiv.innerHTML = `
                             <div class="user-avatar">
@@ -1060,6 +1096,11 @@
             
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.mode-btn')[1].classList.add('active');
+
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('open');
+            }
 
             addSystemMessage(`🔒 بدأت محادثة خاصة مع ${user.name}`);
         };
@@ -1320,6 +1361,7 @@
 
         window.toggleSidebar = function() {
             document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('open');
         };
 
         window.logout = function() {
