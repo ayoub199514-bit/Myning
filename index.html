@@ -953,7 +953,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, onChildAdded, onDisconnect, serverTimestamp, query, orderByChild, limitToLast } 
+        import { getDatabase, ref, set, push, onValue, onChildAdded, onDisconnect, serverTimestamp, query, orderByChild, limitToLast } 
             from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -1002,19 +1002,23 @@
 
         function registerPresence() {
             const userRef = ref(db, `users/${userId}`);
-            push(userRef, {
+            set(userRef, {
                 id: userId,
                 name: currentUser,
                 online: true,
                 lastSeen: serverTimestamp()
+            }).catch((error) => {
+                addSystemMessage(`⚠️ فشل تسجيل حضورك: ${error.message}`);
             });
-            
+
             onDisconnect(userRef).remove();
 
             const usersRef = ref(db, 'users');
             onValue(usersRef, (snapshot) => {
-                const count = snapshot.numChildren || 0;
+                const count = snapshot.size ?? Object.keys(snapshot.val() || {}).length;
                 document.getElementById('onlineCount').textContent = count;
+            }, (error) => {
+                addSystemMessage(`⚠️ تعذّر تحديث عدد المتصلين: ${error.message}`);
             });
         }
 
@@ -1026,7 +1030,7 @@
 
                 snapshot.forEach((child) => {
                     const user = child.val();
-                    if (user.id !== userId) {
+                    if (user && user.id && user.id !== userId) {
                         const userDiv = document.createElement('div');
                         userDiv.className = 'user-item';
                         userDiv.onclick = () => startPrivateChat(user);
@@ -1043,6 +1047,8 @@
                         usersList.appendChild(userDiv);
                     }
                 });
+            }, (error) => {
+                addSystemMessage(`⚠️ تعذّر تحميل قائمة المتصلين: ${error.message}`);
             });
         }
 
@@ -1084,6 +1090,8 @@
                     displayMessage(msg);
                     scrollToBottom();
                 }
+            }, (error) => {
+                addSystemMessage(`⚠️ تعذّر استقبال الرسائل: ${error.message}`);
             });
         }
 
@@ -1103,7 +1111,9 @@
                 timestamp: serverTimestamp()
             };
 
-            push(ref(db, 'messages'), msgData);
+            push(ref(db, 'messages'), msgData).catch((error) => {
+                addSystemMessage(`⚠️ فشل إرسال الرسالة: ${error.message}`);
+            });
             input.value = '';
             window.removeImage();
         };
