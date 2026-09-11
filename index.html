@@ -44,7 +44,7 @@ body{
   position:relative;
 }
 
-/* ---------- ambient background: one slow orchestrated drift ---------- */
+/* ---------- ambient background: layered orchestrated drift ---------- */
 .aurora{position:fixed;inset:-10%;z-index:0;pointer-events:none;filter:blur(70px);opacity:.55}
 .aurora span{position:absolute;border-radius:50%}
 .aurora .a1{width:46vw;height:46vw;max-width:560px;max-height:560px;top:-14%;inset-inline-end:-12%;
@@ -53,14 +53,52 @@ body{
 .aurora .a2{width:42vw;height:42vw;max-width:520px;max-height:520px;bottom:-18%;inset-inline-start:-14%;
   background:radial-gradient(circle at 60% 40%,var(--violet),transparent 70%);opacity:.7;
   animation:drift2 30s ease-in-out infinite alternate}
+.aurora .a3{width:34vw;height:34vw;max-width:420px;max-height:420px;top:38%;inset-inline-start:28%;
+  background:radial-gradient(circle at 50% 50%,var(--up),transparent 72%);opacity:.28;
+  animation:drift3 34s ease-in-out infinite alternate}
 @keyframes drift1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-4%,6%) scale(1.08)}}
 @keyframes drift2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(5%,-5%) scale(1.05)}}
+@keyframes drift3{0%{transform:translate(-3%,-4%) scale(.94)}100%{transform:translate(4%,5%) scale(1.1)}}
+
+/* faint chart wave ticking across the background */
+.chartwave{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.09}
+.chartwave svg{position:absolute;bottom:6%;width:220%;height:34vh;animation:wave-scroll 38s linear infinite}
+.chartwave .w2{opacity:.6;bottom:2%;animation-duration:52s;animation-direction:reverse}
+@keyframes wave-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* floating particles */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.particles i{
+  position:absolute;bottom:-6%;width:3px;height:3px;border-radius:50%;
+  background:var(--amber2);opacity:0;box-shadow:0 0 6px 1px rgba(255,157,61,.6);
+  animation:rise linear infinite;
+}
+.particles i:nth-child(1){left:6%;animation-duration:17s;animation-delay:0s}
+.particles i:nth-child(2){left:16%;animation-duration:22s;animation-delay:2s;background:var(--violet);box-shadow:0 0 6px 1px rgba(143,125,255,.6)}
+.particles i:nth-child(3){left:27%;animation-duration:19s;animation-delay:5s}
+.particles i:nth-child(4){left:39%;animation-duration:25s;animation-delay:1s;background:var(--up);box-shadow:0 0 6px 1px rgba(61,220,132,.6)}
+.particles i:nth-child(5){left:52%;animation-duration:20s;animation-delay:7s}
+.particles i:nth-child(6){left:64%;animation-duration:24s;animation-delay:3s;background:var(--violet);box-shadow:0 0 6px 1px rgba(143,125,255,.6)}
+.particles i:nth-child(7){left:74%;animation-duration:18s;animation-delay:9s}
+.particles i:nth-child(8){left:85%;animation-duration:23s;animation-delay:4s;background:var(--up);box-shadow:0 0 6px 1px rgba(61,220,132,.6)}
+.particles i:nth-child(9){left:93%;animation-duration:21s;animation-delay:6s}
+.particles i:nth-child(10){left:47%;animation-duration:27s;animation-delay:11s}
+@keyframes rise{
+  0%{transform:translateY(0) scale(.6);opacity:0}
+  10%{opacity:.7}
+  85%{opacity:.5}
+  100%{transform:translateY(-108vh) scale(1.1);opacity:0}
+}
 
 .vignette{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(ellipse at 50% 0%,transparent 40%,rgba(0,0,0,.55) 100%)}
 
 .grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+@media (prefers-reduced-motion:reduce){
+  .particles,.chartwave{display:none}
+}
 
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);white-space:nowrap;border:0}
@@ -257,13 +295,56 @@ body{
 }
 .warning b{color:var(--amber2)}
 
+/* ---------- camera modal ---------- */
+.camera-modal{
+  position:fixed;inset:0;z-index:50;display:none;
+  background:rgba(6,5,3,.92);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:16px;
+}
+.camera-modal.open{display:flex}
+.camera-frame{
+  position:relative;width:100%;max-width:520px;border-radius:var(--r-lg);
+  overflow:hidden;border:1px solid var(--line);background:#000;
+  aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;
+}
+.camera-frame video{width:100%;height:100%;object-fit:cover;display:block}
+.camera-guide{
+  position:absolute;inset:8%;border:1.5px dashed rgba(255,157,61,.55);border-radius:14px;
+  pointer-events:none;
+}
+.camera-hint{
+  position:absolute;top:12px;inset-inline-start:0;inset-inline-end:0;text-align:center;
+  font-size:12px;color:#f4efe6;background:rgba(0,0,0,.35);margin:0 auto;
+  padding:6px 12px;border-radius:999px;width:fit-content;
+}
+.camera-controls{
+  position:absolute;bottom:16px;inset-inline-start:0;inset-inline-end:0;
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+}
+.camera-controls .btn{padding:10px 16px;font-size:12.5px}
+.shutter-btn{
+  width:62px;height:62px;border-radius:50%;flex:none;cursor:pointer;
+  background:radial-gradient(circle at 35% 30%,#fff,#d8d0c2 70%);
+  border:4px solid rgba(255,255,255,.35);box-shadow:0 6px 18px rgba(0,0,0,.5);
+  transition:transform .15s;
+}
+.shutter-btn:active{transform:scale(.9)}
+.camera-error{
+  font-size:12.5px;color:#e7e0d2;text-align:center;padding:0 20px;line-height:1.8;
+}
+
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
 </style>
 </head>
 <body>
-<div class="aurora"><span class="a1"></span><span class="a2"></span></div>
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div class="chartwave" aria-hidden="true">
+  <svg class="w1" viewBox="0 0 800 120" preserveAspectRatio="none"><path d="M0 80 L20 60 L40 90 L60 40 L80 70 L100 30 L120 66 L140 50 L160 96 L180 44 L200 74 L220 20 L240 60 L260 40 L280 84 L300 30 L320 58 L340 20 L360 70 L380 50 L400 80 L420 60 L440 90 L460 40 L480 70 L500 30 L520 66 L540 50 L560 96 L580 44 L600 74 L620 20 L640 60 L660 40 L680 84 L700 30 L720 58 L740 20 L760 70 L780 50 L800 80" fill="none" stroke="#ffcf8a" stroke-width="2"/></svg>
+  <svg class="w2" viewBox="0 0 800 120" preserveAspectRatio="none"><path d="M0 50 L20 70 L40 30 L60 60 L80 20 L100 55 L120 35 L140 78 L160 40 L180 65 L200 25 L220 58 L240 38 L260 90 L280 45 L300 70 L320 22 L340 62 L360 42 L380 85 L400 50 L420 70 L440 30 L460 60 L480 20 L500 55 L520 35 L540 78 L560 40 L580 65 L600 25 L620 58 L640 38 L660 90 L680 45 L700 70 L720 22 L740 62 L760 42 L780 85 L800 50" fill="none" stroke="#8f7dff" stroke-width="2"/></svg>
+</div>
+<div class="particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <div class="vignette"></div>
 <div class="grain"></div>
 
@@ -297,6 +378,10 @@ body{
         اختر صورة الشارت
       </label>
       <input id="imageInput" class="sr-only" type="file" accept="image/*">
+      <button id="cameraBtn" class="btn ghost" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        التقط صورة الآن
+      </button>
       <button id="demoBtn" class="btn ghost" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
         جرّبها بشارت تجريبي
@@ -373,6 +458,20 @@ body{
 
 </main>
 
+<div id="cameraModal" class="camera-modal" aria-hidden="true" role="dialog" aria-label="التقاط صورة للشارت">
+  <div class="camera-frame">
+    <video id="cameraVideo" autoplay playsinline muted></video>
+    <div class="camera-guide" aria-hidden="true"></div>
+    <div class="camera-hint">وجّه الكاميرا على الشارت وضغط زر الالتقاط</div>
+    <div id="cameraError" class="camera-error" style="display:none"></div>
+    <div class="camera-controls">
+      <button id="cameraClose" class="btn ghost" type="button">إلغاء</button>
+      <button id="cameraShutter" class="shutter-btn" type="button" aria-label="التقاط الصورة"></button>
+      <button id="cameraSwitch" class="btn ghost" type="button">تبديل الكاميرا</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (() => {
 'use strict';
@@ -392,9 +491,14 @@ const candleList = $('candleList'), candleCount = $('candleCount');
 const stCandles = $('stCandles'), stMomentum = $('stMomentum'), stSupport = $('stSupport');
 const stResistance = $('stResistance'), stQuality = $('stQuality');
 const historyList = $('historyList'), clearHistory = $('clearHistory'), demoBtn = $('demoBtn');
+const cameraBtn = $('cameraBtn'), cameraModal = $('cameraModal'), cameraVideo = $('cameraVideo');
+const cameraClose = $('cameraClose'), cameraShutter = $('cameraShutter'), cameraSwitch = $('cameraSwitch');
+const cameraErrorEl = $('cameraError');
 
 let currentImage = null;
 let busy = false;
+let cameraStream = null;
+let facingMode = 'environment';
 
 /* ============ أدوات ============ */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -430,6 +534,56 @@ function analyzeImage(img) {
   ctx.drawImage(img, 0, 0, w, h);
   const px = ctx.getImageData(0, 0, w, h).data;
 
+  /* ---- المرحلة 1: استخراج ألوان الشموع الفعلية من الصورة (يتكيّف مع أي ثيم) ---- */
+  // نحسب توزيع التشبّع (chroma) لكل بكسل عشان نلاقي عتبة تلقائية بدل رقم ثابت،
+  // ونجمع أكثر لونين "مشبّعين" متعارضين في درجة اللون (Hue) كمرشّحَين للأخضر/الأحمر.
+  const n = w * h;
+  const chroma = new Uint8ClampedArray(n);
+  let chromaSum = 0, chromaCount = 0;
+  const hueBuckets = new Float64Array(36); // كل خانة = 10 درجات Hue
+  const hueWeight = new Float64Array(36);
+
+  for (let p = 0; p < n; p++) {
+    const i = p * 4;
+    const r = px[i], g = px[i + 1], b = px[i + 2];
+    const mx = r > g ? (r > b ? r : b) : (g > b ? g : b);
+    const mn = r < g ? (r < b ? r : b) : (g < b ? g : b);
+    const c = mx - mn;
+    chroma[p] = c;
+    if (c > 18 && mx > 50) {
+      chromaSum += c; chromaCount++;
+      let hue = 0;
+      if (c > 0) {
+        if (mx === r) hue = ((g - b) / c) % 6;
+        else if (mx === g) hue = (b - r) / c + 2;
+        else hue = (r - g) / c + 4;
+        hue *= 60; if (hue < 0) hue += 360;
+      }
+      const bIdx = Math.min(35, Math.floor(hue / 10));
+      hueBuckets[bIdx] += c;
+      hueWeight[bIdx]++;
+    }
+  }
+
+  const chromaAvg = chromaCount ? chromaSum / chromaCount : 45;
+  const threshold = Math.max(28, Math.min(60, chromaAvg * 0.55));
+
+  // نلاقي أقوى تجمّعين للـHue بعيدين عن بعض (يمثّلوا لون الصعود ولون الهبوط)
+  let hueA = -1, wA = 0;
+  for (let i = 0; i < 36; i++) if (hueWeight[i] > wA) { wA = hueWeight[i]; hueA = i; }
+  let hueB = -1, wB = 0;
+  for (let i = 0; i < 36; i++) {
+    const dist = Math.min(Math.abs(i - hueA), 36 - Math.abs(i - hueA));
+    if (dist >= 4 && hueWeight[i] > wB) { wB = hueWeight[i]; hueB = i; }
+  }
+  const centerA = hueA >= 0 ? hueA * 10 + 5 : 130; // افتراضي: أخضر
+  const centerB = hueB >= 0 ? hueB * 10 + 5 : 5;   // افتراضي: أحمر
+  // اللون الأقرب لمنطقة الأخضر/السماوي (80–170°) يُعتبر "صاعد"، والباقي "هابط"
+  const isGreenish = h => h > 70 && h < 180;
+  const upHue = isGreenish(centerA) ? centerA : (isGreenish(centerB) ? centerB : centerA);
+  const dnHue = upHue === centerA ? centerB : centerA;
+  const hueDelta = (a, b) => { const d = Math.abs(a - b) % 360; return Math.min(d, 360 - d); };
+
   const colUp = new Uint16Array(w), colDn = new Uint16Array(w);
   const colTop = new Int16Array(w).fill(h), colBot = new Int16Array(w).fill(-1);
 
@@ -440,11 +594,19 @@ function analyzeImage(img) {
       const r = px[i], g = px[i + 1], b = px[i + 2];
       const mx = r > g ? (r > b ? r : b) : (g > b ? g : b);
       const mn = r < g ? (r < b ? r : b) : (g < b ? g : b);
-      if (mx - mn < 45 || mx < 60) continue;
+      const c = mx - mn;
+      if (c < threshold || mx < 55) continue;
 
+      let hue = 0;
+      if (mx === r) hue = ((g - b) / c) % 6;
+      else if (mx === g) hue = (b - r) / c + 2;
+      else hue = (r - g) / c + 4;
+      hue *= 60; if (hue < 0) hue += 360;
+
+      const dUp = hueDelta(hue, upHue), dDn = hueDelta(hue, dnHue);
       let up = false, dn = false;
-      if (g === mx && g - r > 40 && g - b > 15) up = true;
-      else if (r === mx && r - g > 50 && r - b > 40) dn = true;
+      if (dUp < 35 && dUp < dDn) up = true;
+      else if (dDn < 35 && dDn <= dUp) dn = true;
       else continue;
 
       if (up) colUp[x]++; else colDn[x]++;
@@ -530,36 +692,79 @@ function analyzeImage(img) {
 }
 
 /* ============ القرار والاستنتاج ============ */
+// انحدار خطي بسيط (Least Squares) يعطي ميل الاتجاه الفعلي + معامل التوافق R²
+function linearRegression(ys) {
+  const n = ys.length;
+  if (n < 2) return { slope: 0, r2: 0 };
+  const xs = ys.map((_, i) => i);
+  const mx = avg(xs), my = avg(ys);
+  let num = 0, den = 0;
+  for (let i = 0; i < n; i++) { num += (xs[i] - mx) * (ys[i] - my); den += (xs[i] - mx) ** 2; }
+  const slope = den ? num / den : 0;
+  let ssTot = 0, ssRes = 0;
+  for (let i = 0; i < n; i++) {
+    const pred = my + slope * (xs[i] - mx);
+    ssTot += (ys[i] - my) ** 2;
+    ssRes += (ys[i] - pred) ** 2;
+  }
+  const r2 = ssTot > 0 ? Math.max(0, 1 - ssRes / ssTot) : 0;
+  return { slope, r2 };
+}
+
+// تجميع مستويات الدعم/المقاومة: نبحث عن أسعار اتلمست أكتر من مرة بدل أعلى/أقل نقطة بس
+function clusterLevels(values, range) {
+  if (!values.length) return null;
+  const binSize = Math.max(1, range * 0.03);
+  const bins = new Map();
+  for (const v of values) {
+    const key = Math.round(v / binSize);
+    bins.set(key, (bins.get(key) || 0) + 1);
+  }
+  let bestKey = null, bestCount = 0;
+  for (const [key, count] of bins) if (count > bestCount) { bestCount = count; bestKey = key; }
+  return { level: bestKey * binSize, touches: bestCount };
+}
+
 function buildVerdict(res) {
   const { candles } = res;
   if (!candles.length) return null;
 
   const last = candles.slice(-20);
   const closes = last.map(c => c.close);
-  const resistance = Math.max(...last.map(c => c.high));
-  const support = Math.min(...last.map(c => c.low));
-  const range = Math.max(1, resistance - support);
+  const highs = last.map(c => c.high);
+  const lows = last.map(c => c.low);
 
-  const k = Math.max(1, Math.floor(closes.length / 2));
-  const first = avg(closes.slice(0, closes.length - k));
-  const second = avg(closes.slice(closes.length - k));
+  const resistanceExt = Math.max(...highs);
+  const supportExt = Math.min(...lows);
+  const range = Math.max(1, resistanceExt - supportExt);
+
+  // مستويات مقاومة/دعم "حقيقية" اتلمست أكتر من مرة، مع رجوع لأعلى/أقل نقطة لو مفيش تكرار واضح
+  const resCluster = clusterLevels(highs, range);
+  const supCluster = clusterLevels(lows, range);
+  const resistance = resCluster && resCluster.touches >= 2 ? resCluster.level : resistanceExt;
+  const support = supCluster && supCluster.touches >= 2 ? supCluster.level : supportExt;
+
+  // اتجاه فعلي عبر انحدار خطي على الإغلاقات (مش مجرد فرق بين نصفين)
+  const { slope, r2 } = linearRegression(closes);
+  const slopeNorm = Math.max(-1, Math.min(1, (slope * closes.length) / range * 1.6));
+
   const ups = last.filter(c => c.dir > 0).length;
   const balance = (ups - (last.length - ups)) / last.length;
 
-  let strength = ((second - first) / range) * 2.2 + balance * 0.55;
+  let strength = slopeNorm * 0.7 + balance * 0.3;
   strength = Math.max(-1, Math.min(1, strength));
 
   const drift = (closes[closes.length - 1] - closes[0]) / range;
 
   let sig, sigTxt, trendTxt, momTxt, color;
-  if (strength > 0.18)      { sig = 'buy';  sigTxt = 'شراء';  color = 'var(--up)'; }
-  else if (strength < -0.18){ sig = 'sell'; sigTxt = 'بيع';   color = 'var(--dn)'; }
+  if (strength > 0.16)      { sig = 'buy';  sigTxt = 'شراء';  color = 'var(--up)'; }
+  else if (strength < -0.16){ sig = 'sell'; sigTxt = 'بيع';   color = 'var(--dn)'; }
   else                      { sig = 'wait'; sigTxt = 'انتظار'; color = 'var(--amber2)'; }
 
   if (strength > 0.5)       trendTxt = 'صاعد قوي ↑';
-  else if (strength > 0.18) trendTxt = 'صاعد ↑';
+  else if (strength > 0.16) trendTxt = 'صاعد ↑';
   else if (strength < -0.5) trendTxt = 'هابط قوي ↓';
-  else if (strength < -0.18)trendTxt = 'هابط ↓';
+  else if (strength < -0.16)trendTxt = 'هابط ↓';
   else                      trendTxt = 'عرضي ↔';
 
   if (drift > 0.5)       momTxt = 'زخم صاعد قوي';
@@ -568,18 +773,25 @@ function buildVerdict(res) {
   else if (drift < -0.15)momTxt = 'زخم هابط';
   else                   momTxt = 'زخم محايد';
 
-  const confidence = Math.round(50 + Math.abs(strength) * 45);
+  // الثقة تُبنى من: قوة الاتجاه + مدى اتساق البيانات مع الانحدار (R²) + عدد الشموع المتاحة
+  const dataDepth = Math.min(1, last.length / 20);
+  const confidence = Math.round(
+    42 + Math.abs(strength) * 33 + r2 * 15 + dataDepth * 10
+  );
 
   let quality = 'منخفضة';
   if (candles.length >= 12 && res.w >= 240) quality = 'عالية';
   else if (candles.length >= 6) quality = 'متوسطة';
 
   const pct = Math.round((ups / last.length) * 100);
+  const touchTxt = (resCluster && resCluster.touches >= 2) || (supCluster && supCluster.touches >= 2)
+    ? ' (تم التحقق من المستويات عبر تكرار ملامستها أكثر من مرة).'
+    : '';
   const reason =
     `رصدت العدسة ${candles.length} شمعة. من آخر ${last.length} شمعة: ` +
     `${ups} خضراء مقابل ${last.length - ups} حمراء (${pct}% شراء). ` +
-    `الاتجاه العام ${trendTxt} و${momTxt}. ` +
-    `نطاق التداول بين ${support.toFixed(0)} و ${resistance.toFixed(0)}.`;
+    `الاتجاه العام ${trendTxt} (بميل انحدار فعلي) و${momTxt}. ` +
+    `نطاق التداول بين ${support.toFixed(0)} و ${resistance.toFixed(0)}.` + touchTxt;
 
   return {
     sig, sigTxt, color, confidence, trendTxt, momTxt, quality, reason,
@@ -695,6 +907,87 @@ function loadFile(file) {
   };
   img.src = url;
 }
+
+/* ============ الكاميرا داخل الموقع ============ */
+function showCameraError(msg) {
+  cameraErrorEl.textContent = msg;
+  cameraErrorEl.style.display = 'block';
+  cameraVideo.style.display = 'none';
+}
+
+async function startStream(mode) {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(t => t.stop());
+    cameraStream = null;
+  }
+  cameraErrorEl.style.display = 'none';
+  cameraVideo.style.display = 'block';
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showCameraError('المتصفح ده مش بيدعم فتح الكاميرا من الموقع. استخدم زر "اختر صورة الشارت" بدلاً من ذلك.');
+    return false;
+  }
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: mode }, width: { ideal: 1280 }, height: { ideal: 1280 } },
+      audio: false
+    });
+    cameraVideo.srcObject = cameraStream;
+    return true;
+  } catch (err) {
+    let msg = 'تعذّر فتح الكاميرا. تأكد من منح الإذن للموقع، أو استخدم رفع صورة بدلاً من ذلك.';
+    if (err && err.name === 'NotAllowedError') msg = 'تم رفض إذن الكاميرا. فعّل الإذن من إعدادات المتصفح وحاول تاني.';
+    else if (err && err.name === 'NotFoundError') msg = 'لم يتم العثور على كاميرا على هذا الجهاز.';
+    showCameraError(msg);
+    return false;
+  }
+}
+
+async function openCamera() {
+  cameraModal.classList.add('open');
+  cameraModal.setAttribute('aria-hidden', 'false');
+  await startStream(facingMode);
+}
+
+function closeCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(t => t.stop());
+    cameraStream = null;
+  }
+  cameraModal.classList.remove('open');
+  cameraModal.setAttribute('aria-hidden', 'true');
+}
+
+function captureFromCamera() {
+  if (!cameraStream || !cameraVideo.videoWidth) return;
+  const cv = document.createElement('canvas');
+  cv.width = cameraVideo.videoWidth;
+  cv.height = cameraVideo.videoHeight;
+  cv.getContext('2d').drawImage(cameraVideo, 0, 0, cv.width, cv.height);
+
+  const img = new Image();
+  img.onload = () => {
+    currentImage = img;
+    drawPreview(img);
+    runAnalysis(img);
+  };
+  img.src = cv.toDataURL('image/png');
+  closeCamera();
+}
+
+cameraBtn.addEventListener('click', openCamera);
+cameraClose.addEventListener('click', closeCamera);
+cameraShutter.addEventListener('click', captureFromCamera);
+cameraSwitch.addEventListener('click', () => {
+  facingMode = facingMode === 'environment' ? 'user' : 'environment';
+  startStream(facingMode);
+});
+cameraModal.addEventListener('click', e => {
+  if (e.target === cameraModal) closeCamera();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && cameraModal.classList.contains('open')) closeCamera();
+});
 
 /* ============ الأحداث ============ */
 imageInput.addEventListener('change', e => {
