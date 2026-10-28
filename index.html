@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07110d"><title>Myning | منصة التعدين التجريبية</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><a class="brand" href="index.html"><span class="logo">M</span> Myning</a><nav><a href="index.html">الرئيسية</a><a href="payments.html">الإيداع</a><a href="admin.html">الإدارة</a></nav></header>
+<main class="wrap">
+<section class="hero"><p class="eyebrow">منصة تجريبية</p><h1>ابدأ تجربتك مع <span>Myning</span></h1><p>واجهة تجريبية لإدارة الحساب والرصيد. الرصيد التجريبي ليس عملة حقيقية ولا يمثل أرباحًا مضمونة.</p><div class="actions"><a class="btn primary" href="#account">الدخول أو إنشاء حساب</a><a class="btn ghost" href="payments.html">طلب إيداع</a></div></section>
+<section id="account" class="panel"><h2>حسابك</h2><div id="authStatus" class="muted">جارٍ الاتصال بـ Firebase…</div>
+<div id="authForms" class="auth-grid"><form id="loginForm"><h3>تسجيل الدخول</h3><label>البريد الإلكتروني<input type="email" id="loginEmail" required autocomplete="email"></label><label>كلمة المرور<input type="password" id="loginPassword" required autocomplete="current-password" minlength="6"></label><button class="btn primary" type="submit">دخول</button></form>
+<form id="registerForm"><h3>إنشاء حساب</h3><label>اسم العرض<input id="displayName" required maxlength="40"></label><label>البريد الإلكتروني<input type="email" id="registerEmail" required autocomplete="email"></label><label>كلمة المرور<input type="password" id="registerPassword" required minlength="6" autocomplete="new-password"></label><button class="btn primary" type="submit">إنشاء الحساب</button></form></div>
+<div id="accountPanel" hidden><div class="stats"><div><small>معرّفك</small><strong id="publicId">—</strong></div><div><small>الرصيد التجريبي</small><strong id="balance">0.00</strong></div></div><p id="accountNote" class="muted"></p><div class="actions"><a class="btn primary" href="payments.html">الإيداع</a><button id="logoutBtn" class="btn ghost" type="button">تسجيل الخروج</button></div></div><p id="message" class="message" role="status"></p></section>
+<section class="panel"><h2>شفافية وأمان</h2><p class="muted">كل تعديل للرصيد التجريبي يتم عبر وظيفة خادم بصلاحيات المدير. طلبات الإيداع لا تُحوّل إلى رصيد حقيقي تلقائيًا في هذا القالب.</p></section>
+</main><footer>© Myning — تجربة توضيحية</footer>
+<script type="module" src="app.js"></script>
+</body></html>
