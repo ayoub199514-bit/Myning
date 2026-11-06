@@ -1,30 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
-
-    match /users/{uid} {
-      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
-      allow create: if signedIn() && request.auth.uid == uid
-        && request.resource.data.uid == uid
-        && request.resource.data.demoBalance == 0;
-      // Clients may only change displayName. Balances and IDs are server-controlled.
-      allow update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName']);
-      allow delete: if isAdmin();
-    }
-
-    match /balanceAudit/{auditId} {
-      allow read: if isAdmin();
-      allow write: if false;
-    }
-    match /depositRequests/{requestId} {
-      allow read: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
-      allow write: if false;
-    }
-    match /{document=**} {
-      allow read, write: if false;
-    }
+ match /databases/{database}/documents {
+  function signedIn(){return request.auth != null;}
+  function isOwnerAdmin(){return signedIn() && request.auth.token.email == "ayoub.199514@gmail.com" && request.auth.token.email_verified == true;}
+  match /users/{uid}{
+   allow read: if signedIn() && (request.auth.uid == uid || isOwnerAdmin());
+   allow create: if signedIn() && request.auth.uid == uid && request.resource.data.uid == uid && request.resource.data.demoBalance == 0;
+   allow update: if (signedIn() && request.auth.uid == uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName']))
+    || (isOwnerAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['demoBalance','updatedAt']) && request.resource.data.demoBalance is number && request.resource.data.demoBalance >= 0);
+   allow delete: if isOwnerAdmin();
   }
+  match /balanceAudit/{auditId}{
+   allow read: if isOwnerAdmin();
+   allow create: if isOwnerAdmin() && request.resource.data.keys().hasAll(['uid','publicId','delta','previousBalance','newBalance','reason','adminEmail','createdAt','type']) && request.resource.data.adminEmail == "ayoub.199514@gmail.com" && request.resource.data.type == "demo_balance_adjustment" && request.resource.data.delta is number && request.resource.data.previousBalance is number && request.resource.data.newBalance is number && request.resource.data.reason is string && request.resource.data.createdAt == request.time;
+   allow update,delete: if false;
+  }
+  match /depositRequests/{requestId}{allow read: if signedIn() && (resource.data.uid == request.auth.uid || isOwnerAdmin());allow write: if false;}
+  match /{document=**}{allow read,write: if false;}
+ }
 }
